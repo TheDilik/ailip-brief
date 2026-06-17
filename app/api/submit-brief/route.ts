@@ -34,6 +34,30 @@ export async function POST(req: NextRequest) {
     const studioHtml = generateEmailHTML(data, submissionId);
     const clientHtml = generateConfirmationHTML(data.client_name || data.contact_name, submissionId);
 
+    // Save to Google Sheets
+    const SHEETS_URL = "https://script.google.com/macros/s/AKfycbz5BiME-Olm2YXudksbqRJFrt20RdOPxI-oUKon41hH94D2GnUTRPn8eB4xdxz1P84ulw/exec";
+    try {
+      await fetch(SHEETS_URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          id: submissionId,
+          date: new Date().toISOString(),
+          contact_name: data.contact_name,
+          email: data.email,
+          phone: data.phone || "",
+          company_name_en: data.company_name_en || "",
+          company_name_ar: data.company_name_ar || "",
+          city: data.city || "",
+          budget: data.budget || "",
+          timeline: data.timeline || "",
+          website_current: data.website_current || "",
+        }),
+      });
+    } catch (e) {
+      console.error("[Sheets]", e);
+    }
+
     if (process.env.RESEND_API_KEY) {
       await Promise.all([
         sendViaResend(

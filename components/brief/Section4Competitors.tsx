@@ -20,14 +20,6 @@ export default function Section4Competitors() {
     setField("competitor_sites", rows);
   };
 
-  const T = ({ id, label, rows = 3, sub }: { id: keyof typeof data; label: string; rows?: number; sub?: string }) => (
-    <div>
-      <label className="brief-label">{label}</label>
-      {sub && <p className="text-muted text-xs mb-2">{sub}</p>}
-      <textarea rows={rows} className="brief-input" value={data[id] as string} onChange={e => setField(id, e.target.value)} />
-    </div>
-  );
-
   return (
     <SectionWrapper id="section-4" number={4} title="Конкурентный анализ" subtitle="Кто ваши конкуренты и чем вы лучше" completion={sectionCompletion[3]}>
       <div className="space-y-8">
@@ -77,10 +69,18 @@ export default function Section4Competitors() {
           </div>
         </div>
 
-        <T id="indirect_competitors" label="Косвенные конкуренты" rows={2} sub="Компании, которые решают ту же проблему другим путём" />
-        <T id="unique_selling_proposition" label="Уникальное торговое предложение (УТП)" rows={3} />
-        <T id="sales_argument" label="Главный аргумент продаж" rows={2} sub="Почему клиент должен выбрать именно вас?" />
-        <T id="common_objections" label="Типичные возражения клиентов" rows={3} sub="Что обычно говорят клиенты, когда сомневаются?" />
+        {[
+          { id: "indirect_competitors", label: "Косвенные конкуренты", rows: 2, sub: "Компании, которые решают ту же проблему другим путём" },
+          { id: "unique_selling_proposition", label: "Уникальное торговое предложение (УТП)", rows: 3 },
+          { id: "sales_argument", label: "Главный аргумент продаж", rows: 2, sub: "Почему клиент должен выбрать именно вас?" },
+          { id: "common_objections", label: "Типичные возражения клиентов", rows: 3, sub: "Что обычно говорят клиенты, когда сомневаются?" },
+        ].map(f => (
+          <div key={f.id}>
+            <label className="brief-label">{f.label}</label>
+            {f.sub && <p className="text-muted text-xs mb-2">{f.sub}</p>}
+            <textarea rows={f.rows} className="brief-input" value={(data as any)[f.id]} onChange={e => setField(f.id as any, e.target.value)} />
+          </div>
+        ))}
 
         {/* Competitor sites */}
         <div>

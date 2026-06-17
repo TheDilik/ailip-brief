@@ -55,20 +55,6 @@ export default function Section10Budget() {
     setField("communication_preference", cp);
   };
 
-  const T = ({ id, label, rows = 3, sub, placeholder = "" }: { id: keyof typeof data; label: string; rows?: number; sub?: string; placeholder?: string }) => (
-    <div>
-      <label className="brief-label">{label}</label>
-      {sub && <p className="text-muted text-xs mb-2">{sub}</p>}
-      <textarea rows={rows} className="brief-input" placeholder={placeholder} value={data[id] as string} onChange={e => setField(id, e.target.value)} />
-    </div>
-  );
-
-  const F = ({ id, label, type = "text", placeholder = "" }: { id: keyof typeof data; label: string; type?: string; placeholder?: string }) => (
-    <div>
-      <label className="brief-label">{label}</label>
-      <input type={type} className="brief-input" placeholder={placeholder} value={data[id] as string} onChange={e => setField(id, e.target.value)} />
-    </div>
-  );
 
   const tierColors: Record<string, string> = {
     starter: "border-border",
@@ -107,15 +93,24 @@ export default function Section10Budget() {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-          <F id="content_production_budget" label="Бюджет на создание контента" placeholder="Фото, видео, тексты, переводы..." />
-          <F id="marketing_budget" label="Маркетинговый бюджет (после запуска)" placeholder="Google Ads, SEO, SMM..." />
+          <div>
+            <label className="brief-label">Бюджет на создание контента</label>
+            <input type="text" className="brief-input" placeholder="Фото, видео, тексты, переводы..." value={data.content_production_budget} onChange={e => setField("content_production_budget", e.target.value)} />
+          </div>
+          <div>
+            <label className="brief-label">Маркетинговый бюджет (после запуска)</label>
+            <input type="text" className="brief-input" placeholder="Google Ads, SEO, SMM..." value={data.marketing_budget} onChange={e => setField("marketing_budget", e.target.value)} />
+          </div>
         </div>
 
         <div className="gold-divider" />
 
         {/* Dates */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-          <F id="desired_launch_date" label="Желаемая дата запуска" type="date" />
+          <div>
+            <label className="brief-label">Желаемая дата запуска</label>
+            <input type="date" className="brief-input" value={data.desired_launch_date} onChange={e => setField("desired_launch_date", e.target.value)} />
+          </div>
           <div>
             <label className="brief-label">Жёсткий дедлайн?</label>
             <div className="flex gap-4 mt-2">
@@ -132,7 +127,10 @@ export default function Section10Budget() {
           </div>
         </div>
 
-        <F id="launch_event" label="Событие, к которому приурочен запуск" placeholder="Выставка Big 5, открытие шоурума, тендер..." />
+        <div>
+          <label className="brief-label">Событие, к которому приурочен запуск</label>
+          <input type="text" className="brief-input" placeholder="Выставка Big 5, открытие шоурума, тендер..." value={data.launch_event} onChange={e => setField("launch_event", e.target.value)} />
+        </div>
 
         {/* Timeline */}
         <div>
@@ -199,18 +197,19 @@ export default function Section10Budget() {
         <div className="gold-divider" />
 
         {/* Final questions */}
-        <T id="ideal_website_description" label="Опишите идеальный сайт своей мечты" rows={5}
-          sub="Если бы деньги и время не имели значения — каким бы был ваш сайт?"
-          placeholder="Расскажите свободно — стиль, ощущение, что он должен передавать клиентам..." />
-        <T id="ksa_specifics" label="Специфика рынка KSA" rows={3}
-          sub="Культурные особенности, локальные требования, Vision 2030, Nitaqat, Saudization..."
-          placeholder="Например: важен арабский язык для государственных клиентов, нет смешанных фото..." />
-        <T id="mistakes_to_avoid" label="Ошибки прошлого / чего избежать" rows={3}
-          placeholder="Что не сработало на прошлом сайте? Что хотите сделать иначе?" />
-        <T id="anything_else" label="Что ещё важно нам знать?" rows={3}
-          placeholder="Любая информация, которая поможет нам лучше понять ваш бизнес..." />
-        <T id="mvp_priority" label="MVP — что запустить в первую очередь?" rows={2}
-          placeholder="Если нужно запустить быстро — какие 3 страницы / функции критичны?" />
+        {[
+          { id: "ideal_website_description", label: "Опишите идеальный сайт своей мечты", rows: 5, sub: "Если бы деньги и время не имели значения — каким бы был ваш сайт?", placeholder: "Расскажите свободно — стиль, ощущение, что он должен передавать клиентам..." },
+          { id: "ksa_specifics", label: "Специфика рынка KSA", rows: 3, sub: "Культурные особенности, локальные требования, Vision 2030, Nitaqat, Saudization...", placeholder: "Например: важен арабский язык для государственных клиентов, нет смешанных фото..." },
+          { id: "mistakes_to_avoid", label: "Ошибки прошлого / чего избежать", rows: 3, placeholder: "Что не сработало на прошлом сайте? Что хотите сделать иначе?" },
+          { id: "anything_else", label: "Что ещё важно нам знать?", rows: 3, placeholder: "Любая информация, которая поможет нам лучше понять ваш бизнес..." },
+          { id: "mvp_priority", label: "MVP — что запустить в первую очередь?", rows: 2, placeholder: "Если нужно запустить быстро — какие 3 страницы / функции критичны?" },
+        ].map(f => (
+          <div key={f.id}>
+            <label className="brief-label">{f.label}</label>
+            {f.sub && <p className="text-muted text-xs mb-2">{f.sub}</p>}
+            <textarea rows={f.rows} className="brief-input" placeholder={f.placeholder} value={(data as any)[f.id]} onChange={e => setField(f.id as any, e.target.value)} />
+          </div>
+        ))}
 
         <div className="gold-divider" />
 

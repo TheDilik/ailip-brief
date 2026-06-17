@@ -50,21 +50,6 @@ function SegmentCard({ title, segKey, data, onChange }: {
 export default function Section5Audience() {
   const { data, setField, setNestedField, sectionCompletion } = useBrief();
 
-  const T = ({ id, label, rows = 3, sub }: { id: keyof typeof data; label: string; rows?: number; sub?: string }) => (
-    <div>
-      <label className="brief-label">{label}</label>
-      {sub && <p className="text-muted text-xs mb-2">{sub}</p>}
-      <textarea rows={rows} className="brief-input" value={data[id] as string} onChange={e => setField(id, e.target.value)} />
-    </div>
-  );
-
-  const F = ({ id, label }: { id: keyof typeof data; label: string }) => (
-    <div>
-      <label className="brief-label">{label}</label>
-      <input type="text" className="brief-input" value={data[id] as string} onChange={e => setField(id, e.target.value)} />
-    </div>
-  );
-
   return (
     <SectionWrapper id="section-5" number={5} title="Целевая аудитория" subtitle="Кто ваши клиенты и как они принимают решения" completion={sectionCompletion[4]}>
       <div className="space-y-8">
@@ -85,11 +70,25 @@ export default function Section5Audience() {
 
         <div className="gold-divider" />
 
-        <T id="how_clients_find_you" label="Как клиенты сейчас находят вас?" rows={3} sub="Сарафан, выставки, Instagram, Google, tenders.sa, рекомендации..." />
-        <T id="sales_funnel" label="Воронка продаж" rows={3} sub="Опишите путь от первого контакта до подписания договора" />
+        <div>
+          <label className="brief-label">Как клиенты сейчас находят вас?</label>
+          <p className="text-muted text-xs mb-2">Сарафан, выставки, Instagram, Google, tenders.sa, рекомендации...</p>
+          <textarea rows={3} className="brief-input" value={data.how_clients_find_you} onChange={e => setField("how_clients_find_you", e.target.value)} />
+        </div>
+        <div>
+          <label className="brief-label">Воронка продаж</label>
+          <p className="text-muted text-xs mb-2">Опишите путь от первого контакта до подписания договора</p>
+          <textarea rows={3} className="brief-input" value={data.sales_funnel} onChange={e => setField("sales_funnel", e.target.value)} />
+        </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-          <F id="average_deal_cycle" label="Средний цикл сделки" />
-          <F id="average_check_sar" label="Средний чек (SAR)" />
+          <div>
+            <label className="brief-label">Средний цикл сделки</label>
+            <input type="text" className="brief-input" value={data.average_deal_cycle} onChange={e => setField("average_deal_cycle", e.target.value)} />
+          </div>
+          <div>
+            <label className="brief-label">Средний чек (SAR)</label>
+            <input type="text" className="brief-input" value={data.average_check_sar} onChange={e => setField("average_check_sar", e.target.value)} />
+          </div>
         </div>
       </div>
     </SectionWrapper>

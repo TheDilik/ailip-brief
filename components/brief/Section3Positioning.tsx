@@ -3,25 +3,29 @@
 import SectionWrapper from "./SectionWrapper";
 import { useBrief } from "@/lib/brief-context";
 
-export default function Section3Positioning() {
-  const { data, setField, sectionCompletion } = useBrief();
-
-  const T = ({ id, label, rows = 3, sub }: { id: keyof typeof data; label: string; rows?: number; sub?: string }) => (
+function T({ id, label, rows = 3, sub, value, onChange }: { id: string; label: string; rows?: number; sub?: string; value: string; onChange: (id: any, v: string) => void }) {
+  return (
     <div>
       <label className="brief-label">{label}</label>
       {sub && <p className="text-muted text-xs mb-2">{sub}</p>}
-      <textarea rows={rows} className="brief-input" value={data[id] as string} onChange={e => setField(id, e.target.value)} />
+      <textarea rows={rows} className="brief-input" value={value} onChange={e => onChange(id, e.target.value)} />
     </div>
   );
+}
 
-  const F = ({ id, label, rtl = false, placeholder = "" }: { id: keyof typeof data; label: string; rtl?: boolean; placeholder?: string }) => (
+function F({ id, label, rtl = false, placeholder = "", value, onChange }: { id: string; label: string; rtl?: boolean; placeholder?: string; value: string; onChange: (id: any, v: string) => void }) {
+  return (
     <div>
       <label className="brief-label">{label}</label>
       <input type="text" dir={rtl ? "rtl" : undefined} className="brief-input" placeholder={placeholder}
-        value={data[id] as string} onChange={e => setField(id, e.target.value)}
+        value={value} onChange={e => onChange(id, e.target.value)}
         style={rtl ? { fontFamily: "'Noto Sans Arabic', var(--font-inter), sans-serif" } : undefined} />
     </div>
   );
+}
+
+export default function Section3Positioning() {
+  const { data, setField, sectionCompletion } = useBrief();
 
   const updateStat = (index: number, value: string) => {
     const stats = [...data.key_stats];
@@ -32,14 +36,14 @@ export default function Section3Positioning() {
   return (
     <SectionWrapper id="section-3" number={3} title="Позиционирование" subtitle="Кто вы, что делаете, чем гордитесь" completion={sectionCompletion[2]}>
       <div className="space-y-6">
-        <T id="company_description" label="Описание компании" rows={4} sub="Расскажите о компании в свободной форме — для главной страницы сайта" />
-        <T id="company_history" label="История компании" rows={3} sub="Как всё началось, ключевые вехи" />
-        <T id="mission_vision" label="Миссия и видение" rows={2} />
-        <T id="brand_values" label="Ценности бренда" rows={2} sub="3–5 ключевых ценностей" />
+        <T id="company_description" label="Описание компании" rows={4} sub="Расскажите о компании в свободной форме — для главной страницы сайта" value={data.company_description} onChange={setField} />
+        <T id="company_history" label="История компании" rows={3} sub="Как всё началось, ключевые вехи" value={data.company_history} onChange={setField} />
+        <T id="mission_vision" label="Миссия и видение" rows={2} value={data.mission_vision} onChange={setField} />
+        <T id="brand_values" label="Ценности бренда" rows={2} sub="3–5 ключевых ценностей" value={data.brand_values} onChange={setField} />
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-          <F id="tagline_en" label="Слоган (English)" placeholder="Building Excellence Across the Kingdom" />
-          <F id="tagline_ar" label="الشعار (عربي)" rtl placeholder="نبني التميز في كل مكان" />
+          <F id="tagline_en" label="Слоган (English)" placeholder="Building Excellence Across the Kingdom" value={data.tagline_en} onChange={setField} />
+          <F id="tagline_ar" label="الشعار (عربي)" rtl placeholder="نبني التميز في كل مكان" value={data.tagline_ar} onChange={setField} />
         </div>
 
         <div className="gold-divider" />
@@ -66,9 +70,9 @@ export default function Section3Positioning() {
 
         <div className="gold-divider" />
 
-        <T id="landmark_projects" label="Знаковые проекты" rows={5} sub="Ваши самые гордые реализованные проекты — название, тип, масштаб, особенность" />
-        <T id="notable_clients" label="Ключевые клиенты" rows={2} sub="Застройщики, госструктуры, крупные бренды" />
-        <T id="certificates_licenses" label="Сертификаты и лицензии" rows={2} sub="ISO, Aramco, MOMRA, Vision 2030, другие" />
+        <T id="landmark_projects" label="Знаковые проекты" rows={5} sub="Ваши самые гордые реализованные проекты — название, тип, масштаб, особенность" value={data.landmark_projects} onChange={setField} />
+        <T id="notable_clients" label="Ключевые клиенты" rows={2} sub="Застройщики, госструктуры, крупные бренды" value={data.notable_clients} onChange={setField} />
+        <T id="certificates_licenses" label="Сертификаты и лицензии" rows={2} sub="ISO, Aramco, MOMRA, Vision 2030, другие" value={data.certificates_licenses} onChange={setField} />
       </div>
     </SectionWrapper>
   );

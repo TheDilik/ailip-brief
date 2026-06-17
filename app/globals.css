@@ -1,0 +1,368 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --bg: #F8F8F6;
+  --canvas: #FFFFFF;
+  --ink: #0D0D0D;
+  --muted: #767676;
+  --faint: #B0B0B0;
+  --accent: #1A1AFF;
+  --accent-soft: #EAEAFF;
+  --accent-mid: #4B4BFF;
+  --border: rgba(13,13,13,0.09);
+  --border-strong: rgba(13,13,13,0.18);
+  --surface: rgba(13,13,13,0.03);
+  --radius: 10px;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-space), "Space Grotesk", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+/* ─── Scrollbar ─── */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--border-strong); border-radius: 2px; }
+::-webkit-scrollbar-thumb:hover { background: var(--accent); }
+
+/* ─── Card ─── */
+.brief-card {
+  background: var(--canvas);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05), 0 4px 16px rgba(0,0,0,0.03);
+}
+
+/* ─── Label ─── */
+.brief-label {
+  display: block;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  margin-bottom: 6px;
+}
+
+.brief-label.required::after {
+  content: ' *';
+  color: var(--accent);
+}
+
+/* ─── Input ─── */
+.brief-input {
+  width: 100%;
+  background: var(--bg);
+  border: 1px solid var(--border-strong);
+  border-radius: 8px;
+  padding: 11px 14px;
+  color: var(--ink);
+  font-family: var(--font-space), "Space Grotesk", sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  transition: border-color 0.15s, box-shadow 0.15s, background 0.15s;
+  outline: none;
+}
+
+.brief-input:focus {
+  border-color: var(--accent);
+  background: var(--canvas);
+  box-shadow: 0 0 0 3px rgba(26,26,255,0.1);
+}
+
+.brief-input::placeholder {
+  color: var(--faint);
+  font-weight: 400;
+}
+
+.brief-input[dir="rtl"] {
+  text-align: right;
+  font-family: 'Noto Sans Arabic', var(--font-space), sans-serif;
+}
+
+textarea.brief-input {
+  resize: vertical;
+  min-height: 88px;
+  line-height: 1.6;
+}
+
+select.brief-input {
+  cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23767676' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  background-color: var(--bg);
+  padding-right: 36px;
+}
+
+select.brief-input option { background: var(--canvas); color: var(--ink); }
+
+/* ─── Checkbox ─── */
+.brief-checkbox {
+  appearance: none;
+  width: 17px;
+  height: 17px;
+  border: 1.5px solid var(--border-strong);
+  border-radius: 4px;
+  background: var(--canvas);
+  cursor: pointer;
+  position: relative;
+  flex-shrink: 0;
+  transition: all 0.15s;
+}
+
+.brief-checkbox:checked {
+  background: var(--accent);
+  border-color: var(--accent);
+}
+
+.brief-checkbox:checked::after {
+  content: '';
+  position: absolute;
+  left: 4px;
+  top: 1.5px;
+  width: 5px;
+  height: 9px;
+  border: 2px solid #fff;
+  border-left: none;
+  border-top: none;
+  transform: rotate(45deg);
+}
+
+/* ─── Radio ─── */
+.brief-radio {
+  appearance: none;
+  width: 17px;
+  height: 17px;
+  border: 1.5px solid var(--border-strong);
+  border-radius: 50%;
+  background: var(--canvas);
+  cursor: pointer;
+  position: relative;
+  flex-shrink: 0;
+  transition: all 0.15s;
+}
+
+.brief-radio:checked { border-color: var(--accent); }
+
+.brief-radio:checked::after {
+  content: '';
+  position: absolute;
+  left: 3px;
+  top: 3px;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--accent);
+}
+
+/* ─── Section badge ─── */
+.section-badge {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  background: var(--ink);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 14px;
+  flex-shrink: 0;
+  letter-spacing: -0.02em;
+}
+
+/* ─── Divider ─── */
+.gold-divider {
+  height: 1px;
+  background: var(--border);
+}
+
+/* ─── Progress bar fill ─── */
+.progress-bar-fill {
+  height: 100%;
+  background: var(--ink);
+  transition: width 0.5s cubic-bezier(0.4,0,0.2,1);
+  border-radius: 9999px;
+}
+
+/* ─── Buttons ─── */
+.btn-gold {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 13px 28px;
+  background: var(--ink);
+  color: #fff;
+  font-weight: 600;
+  font-size: 14px;
+  font-family: var(--font-space), "Space Grotesk", sans-serif;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s;
+  letter-spacing: -0.01em;
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-gold::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--accent);
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.btn-gold:hover::before { opacity: 1; }
+.btn-gold:hover { transform: translateY(-1px); box-shadow: 0 4px 20px rgba(26,26,255,0.25); }
+.btn-gold:active { transform: translateY(0); }
+.btn-gold > * { position: relative; z-index: 1; }
+
+.btn-ghost {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 9px 18px;
+  border: 1.5px solid var(--border-strong);
+  color: var(--ink);
+  font-size: 13px;
+  font-weight: 500;
+  font-family: var(--font-space), sans-serif;
+  border-radius: 8px;
+  background: transparent;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.btn-ghost:hover {
+  background: var(--surface);
+  border-color: var(--ink);
+}
+
+/* ─── Rating button ─── */
+.rating-btn {
+  width: 34px;
+  height: 34px;
+  border-radius: 7px;
+  border: 1.5px solid var(--border-strong);
+  background: var(--canvas);
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 600;
+  font-family: var(--font-space), sans-serif;
+  cursor: pointer;
+  transition: all 0.15s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.rating-btn.active {
+  background: var(--ink);
+  border-color: var(--ink);
+  color: #fff;
+}
+
+.rating-btn:hover:not(.active) {
+  border-color: var(--ink);
+  color: var(--ink);
+}
+
+/* ─── Table ─── */
+.brief-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.brief-table th {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--faint);
+  font-weight: 600;
+  padding: 8px 10px;
+  text-align: left;
+  border-bottom: 1px solid var(--border);
+}
+
+.brief-table td {
+  padding: 5px 8px;
+  border-bottom: 1px solid var(--border);
+  vertical-align: middle;
+}
+
+.brief-table tr:hover td { background: var(--surface); }
+
+/* ─── Completion badge ─── */
+.completion-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.completion-badge.done {
+  background: rgba(34,197,94,0.1);
+  color: #15803d;
+}
+
+.completion-badge.partial {
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+
+.completion-badge.empty {
+  background: var(--surface);
+  color: var(--faint);
+}
+
+/* ─── Accent glow ─── */
+.accent-glow {
+  box-shadow: 0 4px 20px rgba(26,26,255,0.18);
+}
+
+/* ─── Shimmer text ─── */
+.shimmer-text {
+  color: var(--ink);
+}
+
+/* ─── Gold glow (repurposed for accent) ─── */
+.gold-glow { box-shadow: 0 0 0 2px var(--accent); }
+.gold-glow-sm { box-shadow: 0 0 0 2px var(--accent); }
+
+/* ─── Animations ─── */
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(28px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.fade-in-up { animation: fadeInUp 0.55s cubic-bezier(0.16,1,0.3,1) forwards; }
+
+@keyframes dash {
+  to { stroke-dashoffset: 0; }
+}
+
+/* ─── Hero grid bg ─── */
+.hero-grid {
+  background-image:
+    linear-gradient(var(--border) 1px, transparent 1px),
+    linear-gradient(90deg, var(--border) 1px, transparent 1px);
+  background-size: 60px 60px;
+}

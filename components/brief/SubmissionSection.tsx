@@ -18,6 +18,8 @@ export default function SubmissionSection({ onSuccess }: { onSuccess: (id: strin
 
   const totalPct = Math.round(sectionCompletion.reduce((a, b) => a + b, 0) / sectionCompletion.length * 100);
 
+  const SHEETS_URL = "https://script.google.com/macros/s/AKfycbyjiJ1FZXN1RdqnuMljsNG0Pklgp5NNIeN1OFHoeMyLn7VWWMA8VLmnQZns2gjVVCqBEA/exec";
+
   const handleSubmit = async () => {
     if (!data.contact_name || !data.email) {
       setError("Укажите имя и email в разделе 1 (О компании).");
@@ -34,7 +36,27 @@ export default function SubmissionSection({ onSuccess }: { onSuccess: (id: strin
       });
       const json = await res.json();
       if (json.success) {
-        onSuccess(json.submissionId);
+        // Send to Google Sheets from browser (bypasses server CORS restrictions)
+        const submissionId = json.submissionId;
+        fetch(SHEETS_URL, {
+          method: "POST",
+          mode: "no-cors",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            id: submissionId,
+            date: new Date().toISOString(),
+            contact_name: data.contact_name,
+            email: data.email,
+            phone: data.phone_whatsapp || "",
+            company_name_en: data.company_name_en || "",
+            company_name_ar: data.company_name_ar || "",
+            city: data.city || "",
+            budget: data.budget || "",
+            timeline: data.timeline || "",
+            website: data.website || "",
+          }),
+        }).catch(() => {});
+        onSuccess(submissionId);
         localStorage.removeItem("brief_pro_data");
       } else {
         setError(json.error || "Ошибка отправки.");

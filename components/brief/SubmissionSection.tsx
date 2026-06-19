@@ -36,25 +36,104 @@ export default function SubmissionSection({ onSuccess }: { onSuccess: (id: strin
       });
       const json = await res.json();
       if (json.success) {
-        // Send to Google Sheets from browser (bypasses server CORS restrictions)
         const submissionId = json.submissionId;
+        // Flatten all data for Google Sheets
+        const flat: Record<string, string> = {
+          id: submissionId,
+          date: new Date().toISOString(),
+          // Section 1
+          company_name_en: data.company_name_en,
+          company_name_ar: data.company_name_ar,
+          brand_name: data.brand_name,
+          founded_year: data.founded_year,
+          employees_count: data.employees_count,
+          cr_number: data.cr_number,
+          vat_number: data.vat_number,
+          legal_address: data.legal_address,
+          showroom_address: data.showroom_address,
+          contact_name: data.contact_name,
+          contact_position: data.contact_position,
+          phone_whatsapp: data.phone_whatsapp,
+          email: data.email,
+          website: data.website,
+          social_links: data.social_links,
+          // Section 2
+          directions: data.directions.join(", "),
+          other_directions: data.other_directions,
+          // Section 3
+          company_description: data.company_description,
+          company_history: data.company_history,
+          mission_vision: data.mission_vision,
+          brand_values: data.brand_values,
+          tagline_en: data.tagline_en,
+          tagline_ar: data.tagline_ar,
+          key_stats: data.key_stats.filter(s => s.value).map(s => `${s.label}: ${s.value}`).join(" | "),
+          certificates_licenses: data.certificates_licenses,
+          landmark_projects: data.landmark_projects,
+          notable_clients: data.notable_clients,
+          // Section 4
+          competitors: data.competitors.filter(c => c.name).map(c => `${c.name} (${c.website})`).join(" | "),
+          indirect_competitors: data.indirect_competitors,
+          unique_selling_proposition: data.unique_selling_proposition,
+          sales_argument: data.sales_argument,
+          common_objections: data.common_objections,
+          competitor_sites: data.competitor_sites.filter(s => s.url).map(s => s.url).join(" | "),
+          // Section 5
+          audience_segment_1: Object.entries(data.audience_segment_1).filter(([,v]) => v).map(([k,v]) => `${k}: ${v}`).join(" | "),
+          audience_segment_2: Object.entries(data.audience_segment_2).filter(([,v]) => v).map(([k,v]) => `${k}: ${v}`).join(" | "),
+          how_clients_find_you: data.how_clients_find_you,
+          sales_funnel: data.sales_funnel,
+          average_deal_cycle: data.average_deal_cycle,
+          average_check_sar: data.average_check_sar,
+          // Section 6
+          goals_priority: Object.entries(data.goals_priority).filter(([,v]) => v > 0).map(([k,v]) => `${k}: ${v}`).join(" | "),
+          monthly_leads_target: data.monthly_leads_target,
+          success_criteria: data.success_criteria,
+          // Section 7
+          page_blocks: Object.entries(data.page_blocks).map(([k,v]) => `${k}: ${v}`).join(" | "),
+          content_availability: Object.entries(data.content_availability).map(([k,v]) => `${k}: ${v}`).join(" | "),
+          content_to_create: data.content_to_create,
+          // Section 8
+          visual_style: data.visual_style,
+          colors: data.color_palette.filter(c => c.hex).map(c => `${c.role}: ${c.hex}`).join(" | "),
+          typography: data.typography.join(", "),
+          corporate_font: data.corporate_font,
+          positive_references: data.positive_references.filter(r => r.url).map(r => r.url).join(" | "),
+          negative_references: data.negative_references.filter(r => r.url).map(r => r.url).join(" | "),
+          forbidden_elements: data.forbidden_elements,
+          // Section 9
+          languages: data.languages.join(", "),
+          domain: data.domain,
+          hosting_status: data.hosting_status,
+          features: Object.entries(data.features).filter(([k,v]) => v && !k.endsWith("_comment")).map(([k,v]) => `${k}: ${v}`).join(" | "),
+          cms: data.cms.join(", "),
+          cms_other: data.cms_other,
+          cms_manager: data.cms_manager,
+          // Section 10
+          budget: data.budget,
+          content_production_budget: data.content_production_budget,
+          marketing_budget: data.marketing_budget,
+          desired_launch_date: data.desired_launch_date,
+          hard_deadline: data.hard_deadline,
+          deadline_reason: data.deadline_reason,
+          launch_event: data.launch_event,
+          timeline: data.timeline,
+          additional_services: Object.entries(data.additional_services).filter(([k,v]) => v && !k.endsWith("_comment")).map(([k,v]) => `${k}: ${v}`).join(" | "),
+          ideal_website_description: data.ideal_website_description,
+          ksa_specifics: data.ksa_specifics,
+          mistakes_to_avoid: data.mistakes_to_avoid,
+          anything_else: data.anything_else,
+          mvp_priority: data.mvp_priority,
+          communication_preference: data.communication_preference.join(", "),
+          update_frequency: data.update_frequency,
+          client_name: data.client_name,
+          client_signature_date: data.client_signature_date,
+        };
         fetch(SHEETS_URL, {
           method: "POST",
           mode: "no-cors",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            id: submissionId,
-            date: new Date().toISOString(),
-            contact_name: data.contact_name,
-            email: data.email,
-            phone: data.phone_whatsapp || "",
-            company_name_en: data.company_name_en || "",
-            company_name_ar: data.company_name_ar || "",
-            city: data.city || "",
-            budget: data.budget || "",
-            timeline: data.timeline || "",
-            website: data.website || "",
-          }),
+          body: JSON.stringify(flat),
         }).catch(() => {});
         onSuccess(submissionId);
         localStorage.removeItem("brief_pro_data");
